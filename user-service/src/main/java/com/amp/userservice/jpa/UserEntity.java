@@ -1,18 +1,16 @@
 package com.amp.userservice.jpa;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.amp.userservice.vo.Role;
 import lombok.Data;
+
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name="users")
-public class UserEntity {
+public class UserEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -28,4 +26,8 @@ public class UserEntity {
 	
 	@Column(nullable = false)
 	private String encryptedPwd;
+
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private Role role;
 }

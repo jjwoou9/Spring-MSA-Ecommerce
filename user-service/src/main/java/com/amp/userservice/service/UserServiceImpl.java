@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 		UserDto userDto= new ModelMapper().map(userEntity, UserDto.class);
 
 		// DB에서 해당 사용자의 구매내역을 조회
-		List<ResponseOrder> orders=new ArrayList();
+		List<ResponseOrder> orders = new ArrayList();
 		// DB에서 해당사용자의 구매내역을 조회 -> UserDto에 추가, 반환
 		userDto.setOrders(orders);
 
@@ -79,13 +79,14 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		UserEntity userEntity = userRepository.findByEmail(username);
+//		UserEntity userEntity = userRepository.findByEmail(username);
 
-		if(userEntity == null){
-			throw new UsernameNotFoundException(username);
-		}
-
-		return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
-				true, true, true, true, new ArrayList<>());
+//		if(userEntity == null){
+//			throw new UsernameNotFoundException(username);
+//		}
+//
+//		return new User(userEntity.getEmail(), userEntity.getEncryptedPwd(),
+//				true, true, true, true, new ArrayList<>());
+		return null;
 	}
 }
