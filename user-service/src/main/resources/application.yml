@@ -1,6 +1,6 @@
 server:
   port: 0
-  
+
 spring:
   application:
     name: user-service
@@ -12,8 +12,6 @@ spring:
   devtools:
     livereload:
       enabled: true
-    freemarker:
-      cache: false
 
   jpa:
     hibernate:
@@ -36,3 +34,11 @@ eureka:
 # 환영 메시지를 위한 greeting
 greeting:
   message: Welcome
+
+logging:
+  level:
+    com.amp.com.amp.userservice: DEBUG
+
+token:
+  expiration_time: 86400000
+  secret: user_token
