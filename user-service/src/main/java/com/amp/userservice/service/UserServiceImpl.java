@@ -12,7 +12,6 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		userEntity.setEncryptedPwd("encryped_password");
 
 		// TODO - UserEntity에 값을 추가 - UserDto에 있는 암호화하지 않은 패스워드를 암호화해서 설정
-		userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getPwd()));
+		userEntity.setEncryptedPwd(passwordEncoder.encode(userDto.getPassword()));
 
 		// 저장 - 저장 결과가 다시 userEntity에 반영
 		userRepository.save(userEntity);
