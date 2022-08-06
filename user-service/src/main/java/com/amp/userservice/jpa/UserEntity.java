@@ -2,14 +2,11 @@ package com.amp.userservice.jpa;
 
 import javax.persistence.*;
 
-import com.amp.userservice.vo.Role;
-import lombok.Data;
+import com.amp.userservice.model.Role;
 
 import java.io.Serializable;
 
-@Data
-@Entity
-@Table(name="users")
+@Deprecated
 public class UserEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

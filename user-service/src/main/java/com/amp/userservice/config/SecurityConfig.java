@@ -1,47 +1,46 @@
 package com.amp.userservice.config;
 
-import com.amp.userservice.service.CustomOAuth2UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.amp.userservice.config.oauth.CustomOAuth2UserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.SecurityFilterChain;
 
-@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@Slf4j
+@Configuration // IoC 빈(bean)을 등록
+@EnableWebSecurity // 필터 체인 관리 시작 어노테이션
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true) // 특정 주소 접근시 권한 및 인증을 위한 어노테이션 활성화
+public class SecurityConfig {
 
     CustomOAuth2UserService customOAuth2UserService;
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/").permitAll()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/user").hasRole("USER")
-                .anyRequest().authenticated()
+    //WebSecurityConfigurerAdapter가 deprecated 되면서 chain을 bean으로 등록해서 사용한다.
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws
+            Exception {
+
+        log.info("[SecurityConfig]  filterChain 접근");
+        http.csrf().disable();
+        http.authorizeRequests()
+                .antMatchers("/user/**").authenticated()
+                .antMatchers("/admin/**").access("hasRole(Role.ROlE_ADMIN)")
+                .anyRequest().permitAll()
                 .and()
-                .exceptionHandling().accessDeniedPage("/accessDenied")
+                .formLogin()
+                .loginPage("/loginForm")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/")
                 .and()
-                .logout().logoutUrl("/logout")
-                .logoutSuccessUrl("/").permitAll()
-                .and()
-                .oauth2Login().loginPage("/login")
+                .oauth2Login()
+                .loginPage("/login")
                 .userInfoEndpoint()
                 .userService(customOAuth2UserService);
+        //구글 로그인이 완료된 뒤 후처리 1. 코드받기(인증), 2.엑세스토큰(권한)
+        //Tip. 코드X (엑세스토큰 + 사용자프로필정보)
 
-        /*
-        * CSRF(Croos-Site Script) 방지
-        * 인증된 사람(Spring Security) 로그인 한사람
-        * "/", "/login"은 permitAll
-        * "/user" 는 인가된 사용자만
-        * 권한 없으면 deni
-        * logout 시키고 "/"로 던진다. --여기까진 spring security
-        * customeOauth2userService를 userService로 등록
-        * */
-
-
+        return http.build();
     }
-
 }
