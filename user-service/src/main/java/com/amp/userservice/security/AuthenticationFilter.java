@@ -64,7 +64,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
         //실제 로그인이 성공했을때 정확하게 어떤 처리를 해줄 것인지?
-        super.successfulAuthentication(request, response, chain, authResult);
+//        super.successfulAuthentication(request, response, chain, authResult);
         String userName = ((User)authResult.getPrincipal()).getUsername();
         log.info("AuthenticationFilter successfulAuthentication userName: {} ", userName);
 
